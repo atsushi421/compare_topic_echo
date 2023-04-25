@@ -3,9 +3,6 @@ import argparse
 import pandas as pd
 import os
 
-    """
-
-    """
 
 def main(logfile):
     parsed = {"timestamp": [], "data_size": []}
