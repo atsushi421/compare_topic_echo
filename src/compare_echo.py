@@ -40,6 +40,10 @@ def create_timestamp_path_map(target_dir) -> dict[str, str]:
     return timestamp_path_map
 
 
+DATA_OFFSET = 24
+POINT_SIZE = 16
+
+
 def compare(before_map: dict[str, str], after_map: dict[str, str]) -> None:
     num_ok = 0
     num_ng = 0
@@ -48,17 +52,16 @@ def compare(before_map: dict[str, str], after_map: dict[str, str]) -> None:
         if before_ts not in after_map.keys():
             continue
 
-        POINT_SIZE = 16
         with open(before_map[before_ts], 'r') as before_log, open(after_map[before_ts], 'r') as after_log:
-            before_data = before_log.readlines()[24:]
+            before_data = before_log.readlines()[DATA_OFFSET:-1]
             before_points = [
-                [j.strip().replace('- ', '')
+                [int(j.strip().replace('- ', ''))
                  for j in before_data[i: i + POINT_SIZE]]
                 for i in range(0, len(before_data), POINT_SIZE)
             ]
-            after_data = after_log.readlines()[24:]
+            after_data = after_log.readlines()[DATA_OFFSET:-1]
             after_points = [
-                [j.strip().replace('- ', '')
+                [int(j.strip().replace('- ', ''))
                  for j in after_data[i: i + POINT_SIZE]]
                 for i in range(0, len(after_data), POINT_SIZE)
             ]
@@ -80,19 +83,19 @@ def compare(before_map: dict[str, str], after_map: dict[str, str]) -> None:
 
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser(description="Process log paths.")
-    # parser.add_argument("-b", "--before_log_path", type=str, required=True,
-    #                     help="Path to the before log.")
-    # parser.add_argument("-a", "--after_log_path", type=str,
-    #                     required=True, help="Path to the after log.")
+    parser = argparse.ArgumentParser(description="Process log paths.")
+    parser.add_argument("-b", "--before_log_path", type=str, required=True,
+                        help="Path to the before log.")
+    parser.add_argument("-a", "--after_log_path", type=str,
+                        required=True, help="Path to the after log.")
 
-    # args = parser.parse_args()
+    args = parser.parse_args()
 
-    # before_log_path = args.before_log_path
-    # after_log_path = args.after_log_path
+    before_log_path = args.before_log_path
+    after_log_path = args.after_log_path
 
-    before_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_before_echo.txt"
-    after_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_after_echo.txt"
+    # before_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_before_echo.txt"
+    # after_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_after_echo.txt"
 
     os.mkdir(SEPARATED_LOG_DIR)
     os.mkdir(AFTER_LOG_DIR)
