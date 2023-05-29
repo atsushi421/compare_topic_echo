@@ -44,6 +44,7 @@ def calc_distance(point1: Point, point2: Point, factor: float) -> float:
 def compare_by_plot(before_map, after_map):
     PLOT_OUTPUT_DIR = './compare_points'
     os.mkdir(PLOT_OUTPUT_DIR)
+    plt.rcParams['figure.max_open_warning'] = 0
 
     for i, before_ts in enumerate(before_map.keys()):
         if before_ts not in after_map.keys():
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     print('=== Compare by distance ===')
     OK_THRESHOLD = 0.001
     print(f'OK_THRESHOLD: {OK_THRESHOLD}')
-    compare_by_distance(before_ts_points_map, after_ts_points_map, OK_THRESHOLD)
+    # compare_by_distance(before_ts_points_map, after_ts_points_map, OK_THRESHOLD)
 
     print('=== Compare by plot ===')
     compare_by_plot(before_ts_points_map, after_ts_points_map)
