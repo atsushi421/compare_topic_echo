@@ -67,10 +67,15 @@ def compare(before_map: dict[str, str], after_map: dict[str, str]) -> None:
             ]
 
             ng_flag = False
+            num_matched = 0
             for before_point in before_points:
-                if before_point not in after_points:
+                if before_point in after_points:
+                    num_matched += 1
+                else:
                     ng_flag = True
-                    break
+
+            print("Match ratio")
+            print(num_matched / len(before_points))
 
             if ng_flag:
                 num_ng += 1
@@ -95,7 +100,7 @@ if __name__ == "__main__":
     after_log_path = args.after_log_path
 
     # before_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_before_echo.txt"
-    # after_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_after_echo.txt"
+    # after_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/20230529_after2_echo.txt"
 
     os.mkdir(SEPARATED_LOG_DIR)
     os.mkdir(AFTER_LOG_DIR)
