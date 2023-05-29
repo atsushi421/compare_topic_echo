@@ -85,6 +85,7 @@ def compare_by_distance(before_map, after_map, ok_threshold: float) -> None:
 
         before_points = before_map[before_ts]
         after_points = after_map[before_ts]
+        assert len(before_points) == len(after_points)
 
         num_ok_points = 0
         for before_point in before_points:
