@@ -1,3 +1,4 @@
+import argparse
 import math
 import struct
 
@@ -42,6 +43,8 @@ def create_timestamp_points_map(src_log_path: str) -> dict[str, list[Point]]:
             POINT_STEP = 16
             points = []
             for i in range(POINT_DATA_OFFSET, len(message_contents)-1, POINT_STEP):
+                if message_contents[i] == '':
+                    break
                 x = [int(message_contents[j]) for j in range(i, i+4)]
                 y = [int(message_contents[j]) for j in range(i+4, i+8)]
                 z = [int(message_contents[j]) for j in range(i+8, i+12)]
@@ -56,8 +59,14 @@ def create_timestamp_points_map(src_log_path: str) -> dict[str, list[Point]]:
 
 
 if __name__ == "__main__":
-    before_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/before_topic_echo.csv"
-    after_log_path = "/home/atsushi22/topic_parser/logs/voxel_grid_downsample_filter/after_topic_echo.csv"
+    parser = argparse.ArgumentParser(description="Process log paths.")
+    parser.add_argument("-b", "--before_log_path", type=str, required=True,
+                        help="Path to the before log.")
+    parser.add_argument("-a", "--after_log_path", type=str,
+                        required=True, help="Path to the after log.")
+    args = parser.parse_args()
+    before_log_path = args.before_log_path
+    after_log_path = args.after_log_path
 
     print('=== Creating timestamp points map ===')
     before_map = create_timestamp_points_map(before_log_path)
@@ -69,6 +78,7 @@ if __name__ == "__main__":
     for before_ts in tqdm(before_map.keys()):
         if before_ts not in after_map.keys():
             continue
+        print(f'Before: {len(before_map[before_ts])}, After: {len(after_map[before_ts])}')
         assert len(before_map[before_ts]) == len(after_map[before_ts])
 
         not_match_flag = False
